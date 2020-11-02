@@ -6,3 +6,5 @@ function add(...x){
   }
   return sum
  }
+
+ console.log(add(10,20))
