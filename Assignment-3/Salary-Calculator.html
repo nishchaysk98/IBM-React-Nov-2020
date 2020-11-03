@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Salary Calculator</title>
+    <style>
+    </style>
+    <script src="../react.development.js"></script>
+    <script src="../react-dom.development.js"></script>
+    <script src="../babel.min.js"></script>
+    <script type="text/babel">
+        class SalaryCalculator extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    basic: 0,
+                    hra: 0,
+                    da: 0,
+                    tax: 30,
+                    salary: 0
+                }
+            }
+
+            onbasicChange = (evt) => {
+                this.setState({
+                    basic: evt.target.value
+                })
+            }
+            onhraChange = (evt) => {
+                this.setState({
+                    hra: evt.target.value
+                })
+            }
+            ondaChange = (evt) => {
+                this.setState({
+                    da: evt.target.value
+                })
+            }
+            ontaxChange = (evt) => {
+                this.setState({
+                    tax: evt.target.value
+                })
+            }
+            onClick = () => {
+                let sum = this.state.basic + this.state.da + this.state.hra
+                let salary = sum * (100 - this.state.tax)/100
+                this.setState({
+                    salary: salary,
+                })
+            }
+            render() {
+                return (
+                <>
+                    <h1>Salary Calculator</h1>
+                    <hr/>
+                        <div class="field">
+                            <label htmlFor="basic">BASIC</label>
+                            <input type="number" name="" id="basic" onChange={this.onbasicChange}/>
+                        </div>
+                        <div class="field">
+                            <label htmlFor="da">DA</label>
+                            <input type="number" name="" id="da" onChange={this.ondaChange}/>
+                        </div>
+                        <div class="field">
+                            <label htmlFor="hra">HRA</label>
+                            <input type="number" name="" id="hra" onChange={this.onhraChange}/>
+                        </div>
+                        <div class="field">
+                            <label htmlFor="tax">Tax</label>
+                            <input type="range" name="" id="tax" min="0" max="30" onChange={this.ontaxChange}/>
+                        </div>
+                        <div class="field">
+                            <input type="button" value="Calculate" onClick={this.onClick}/>
+                        </div>
+                        <div class="field">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>[Basic]</td>
+                                        <td>[HRA]</td>
+                                        <td>[DA]</td>
+                                        <td>[Tax]</td>
+                                        <td>[Salary]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{this.state.basic}</td>
+                                        <td>{this.state.hra}</td>
+                                        <td>{this.state.da}</td>
+                                        <td>{this.state.tax}</td>
+                                        <td>{this.state.salary}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                </>)
+            }
+        }
+
+            ReactDOM.render(
+                <div>
+                    <SalaryCalculator />
+                </div>,
+            document.getElementById('root'))
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
