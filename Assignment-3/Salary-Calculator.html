@@ -44,8 +44,8 @@
                 })
             }
             onClick = () => {
-                let sum = this.state.basic + this.state.da + this.state.hra
-                let salary = sum * (100 - this.state.tax)/100
+                let sum = Number(this.state.basic) + Number(this.state.da) + Number(this.state.hra)
+                let salary = sum * (100 - Number(this.state.tax))/100
                 this.setState({
                     salary: salary,
                 })
