@@ -80,11 +80,8 @@
                     { name, description, price } = this.state;
                 addNew(name, description, price);
             };
-            markOutOfStock = () => {
-
-            }
             render(){
-                const { data } = this.props;
+                const { data, outOfStock } = this.props;
                 return(
                     <div>
                         <h3>Products</h3>
@@ -114,7 +111,7 @@
 
                         <section className="list">
                             <ol>
-                                <ProductsData allProducts={data} markOutOfStock={this.markOutOfStock}/>
+                                <ProductsData allProducts={data} markOutOfStock={outOfStock}/>
                             </ol>
                             <input type="button" value="Remove Out Of Stock" />
                         </section>
@@ -126,28 +123,19 @@
         class ProductsData extends React.Component{
             constructor() {
                 super();
-                this.state = {
-                    productStatus: {
-
-                    },
-                }
             }
-            onCheckBoxClick = (evt, id) => {
-                console.log(evt,id)
-                const status = this.state.productStatus;
-                status[id] = evt.target.checked;
-                this.setState({
-                    productStatus: status,
-                })
+            onCheckBoxClick = (id) => {
+                console.log(id)
+                this.props.markOutOfStock(id);
             }
             render(){
                 const allProducts = this.props.allProducts.map((product) => {
                     return (
                         <li key={product.id}>
-                            <span className={this.state.productStatus[product.id]? "name outofstock": "name"}>{product.name}</span>
+                            <span className={product.outOfStock? "name outofstock": "name"}>{product.name}</span>
                             <div>{product.description}</div>
                             <div className="price">{product.price}</div>
-                            <input type="checkbox" onChange={(evt) => this.onCheckBoxClick(evt,product.id)}/>
+                            <input type="checkbox" onChange={() => this.onCheckBoxClick(product.id)}/>
                             <label htmlFor="">Out of Stock</label>
                             <br/>
                             <input type="button" value="Remove" />
@@ -163,6 +151,15 @@
                 const newState = [ ...currentState, action.payload ];
                 return newState;
             }
+            if (action.type === 'OUT_OF_STOCK'){
+                const newState = currentState.map((product) => {
+                    if(product.id === action.payload){
+                        product.outOfStock = !product.outOfStock;
+                    }
+                    return product
+                })
+                return newState;
+            }
             return currentState;
         }
 
@@ -176,9 +173,14 @@
                     id : ++newProductId,
                     name : name,
                     description : description,
-                    price : price
+                    price : price,
+                    outOfStock: false,
                 };
                 const action = { type : 'ADD_PRODUCT' , payload : newProduct};
+                return action;
+            },
+            outOfStock(id){
+                const action = { type : 'OUT_OF_STOCK', payload: id}
                 return action;
             }
         }
