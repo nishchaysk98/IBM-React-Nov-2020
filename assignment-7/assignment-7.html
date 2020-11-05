@@ -80,14 +80,15 @@
                     { name, description, price } = this.state;
                 addNew(name, description, price);
             };
+
             render(){
-                const { data, outOfStock } = this.props;
+                const { data, removeOutOfStock } = this.props;
                 return(
                     <div>
                         <h3>Products</h3>
                         <hr/>
                         <section className="stats">
-                            <span className="outofstock">1</span>
+                            <span className="outofstock">{data.filter((product) => {return product.outOfStock}).length}</span>
                             <span> / </span>
                             <span>{data.length}</span>
                         </section>
@@ -111,9 +112,9 @@
 
                         <section className="list">
                             <ol>
-                                <ProductsData allProducts={data} markOutOfStock={outOfStock}/>
+                                <ProductsData allProps={this.props}/>
                             </ol>
-                            <input type="button" value="Remove Out Of Stock" />
+                            <input type="button" value="Remove Out Of Stock" onClick={removeOutOfStock}/>
                         </section>
                     </div>
                 )
@@ -125,11 +126,13 @@
                 super();
             }
             onCheckBoxClick = (id) => {
-                console.log(id)
-                this.props.markOutOfStock(id);
+                this.props.allProps.outOfStock(id);
+            }
+            removeProduct = (id) => {
+                this.props.allProps.removeProduct(id);
             }
             render(){
-                const allProducts = this.props.allProducts.map((product) => {
+                const allProducts = this.props.allProps.data.map((product) => {
                     return (
                         <li key={product.id}>
                             <span className={product.outOfStock? "name outofstock": "name"}>{product.name}</span>
@@ -138,7 +141,7 @@
                             <input type="checkbox" onChange={() => this.onCheckBoxClick(product.id)}/>
                             <label htmlFor="">Out of Stock</label>
                             <br/>
-                            <input type="button" value="Remove" />
+                            <input type="button" value="Remove" onClick={() => this.removeProduct(product.id)}/>
                         </li>
                     )
                 });
@@ -158,6 +161,27 @@
                     }
                     return product
                 })
+                return newState;
+            }
+            if (action.type === 'REMOVE_PRODUCT'){
+                const newState = []
+                for(let i = 0; i < currentState.length; i++){
+                    if(currentState[i].id !== action.payload)
+                    {
+                        newState.push(currentState[i])
+                    }
+                }
+                return newState;
+            }
+            if (action.type === 'REMOVE_OUT_OF_STOCK')
+            {
+                const newState = []
+                for(let i = 0; i < currentState.length; i++){
+                    if(!currentState[i].outOfStock)
+                    {
+                        newState.push(currentState[i])
+                    }
+                }
                 return newState;
             }
             return currentState;
@@ -181,6 +205,14 @@
             },
             outOfStock(id){
                 const action = { type : 'OUT_OF_STOCK', payload: id}
+                return action;
+            },
+            removeProduct(id){
+                const action = { type : 'REMOVE_PRODUCT', payload: id}
+                return action;
+            },
+            removeOutOfStock(){
+                const action = { type: 'REMOVE_OUT_OF_STOCK'}
                 return action;
             }
         }
