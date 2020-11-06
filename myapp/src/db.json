@@ -1,0 +1,10 @@
+{
+  "products": {
+    "id": 0,
+    "name": "Nataraja",
+    "description": "Boooooooook",
+    "price": 10,
+    "isOutOfStock": false,
+    "category": "Book"
+  }
+}
